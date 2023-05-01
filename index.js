@@ -26,14 +26,31 @@ const planSchema = new mongoose.Schema({
   title: String,
   start: Date,
 });
+const planSchema2 = new mongoose.Schema({
+  content: String,
+  date: Date,
+  location: String,
+  category: String,
+});
 
 // create model for events
 const Plan = mongoose.model('Plan', planSchema);
+const Plan2 = mongoose.model('Plan2', planSchema2);
 
 // create endpoint to get all events
 app.get('/plans', async (req, res) => {
   try {
     const events = await Plan.find({});
+    res.send(events);
+  } catch (error) {
+    console.error(error);
+    res.sendStatus(500);
+  }
+});
+
+app.get('/plans2', async (req, res) => {
+  try {
+    const events = await Plan2.find({});
     res.send(events);
   } catch (error) {
     console.error(error);
@@ -57,7 +74,25 @@ app.post('/plans', async (req, res) => {
     }
   });
 
+
   
+  app.post('/plans2', async (req, res) => {
+    try {
+      const { content, date, location, category } = req.body;
+      const event = new Plan2({
+        content,
+        date,
+        location,
+        category,
+      });
+      await event.save();
+      res.sendStatus(201);
+    } catch (error) {
+      console.error(error);
+      res.status(500).send('Internal Server Error');
+    }
+  });
+
   app.listen(PORT, () => {
     console.log(`Server started on port ${PORT}`);
   });
