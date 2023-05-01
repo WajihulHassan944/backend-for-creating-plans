@@ -43,21 +43,22 @@ app.get('/plans', async (req, res) => {
 
 // create endpoint to create a new event
 app.post('/plans', async (req, res) => {
-  try {
-    const { title, date } = req.body;
-    const event = new Plan({
-      title,
-      start: new Date(date),
-    });
-    await event.save();
-    res.sendStatus(201);
-  } catch (error) {
-    console.error(error);
-    res.sendStatus(500);
-  }
-});
+    try {
+      const { title, start } = req.body;
+      const event = new Plan({
+        title,
+        start,
+      });
+      await event.save();
+      res.sendStatus(201);
+    } catch (error) {
+      console.error(error);
+      res.status(500).send('Internal Server Error');
+    }
+  });
 
-app.listen(PORT, () => {
+  
+  app.listen(PORT, () => {
     console.log(`Server started on port ${PORT}`);
   });
   
