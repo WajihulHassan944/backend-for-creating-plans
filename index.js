@@ -22,18 +22,18 @@ mongoose.connect(MONGODB_URI, {
 });
 
 // define schema for events
-const eventSchema = new mongoose.Schema({
+const planSchema = new mongoose.Schema({
   title: String,
   start: Date,
 });
 
 // create model for events
-const Event = mongoose.model('Event', eventSchema);
+const Plan = mongoose.model('Plan', planSchema);
 
 // create endpoint to get all events
 app.get('/plans', async (req, res) => {
   try {
-    const events = await Event.find({});
+    const events = await Plan.find({});
     res.send(events);
   } catch (error) {
     console.error(error);
@@ -45,7 +45,7 @@ app.get('/plans', async (req, res) => {
 app.post('/plans', async (req, res) => {
   try {
     const { title, date } = req.body;
-    const event = new Event({
+    const event = new Plan({
       title,
       start: new Date(date),
     });
