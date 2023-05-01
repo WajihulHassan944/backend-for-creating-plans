@@ -31,7 +31,7 @@ const eventSchema = new mongoose.Schema({
 const Event = mongoose.model('Event', eventSchema);
 
 // create endpoint to get all events
-app.get('/events', async (req, res) => {
+app.get('/plans', async (req, res) => {
   try {
     const events = await Event.find({});
     res.send(events);
@@ -42,7 +42,7 @@ app.get('/events', async (req, res) => {
 });
 
 // create endpoint to create a new event
-app.post('/events', async (req, res) => {
+app.post('/plans', async (req, res) => {
   try {
     const { title, date } = req.body;
     const event = new Event({
