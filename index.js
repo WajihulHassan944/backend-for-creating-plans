@@ -79,7 +79,7 @@ app.post('/plans', async (req, res) => {
   
   app.post('/plans2', async (req, res) => {
     try {
-      const { content, date, location, category } = req.body;
+      const { name2 , content, date, location, category } = req.body;
       const event = new Plan2({
         name2,
         content,
