@@ -23,8 +23,12 @@ mongoose.connect(MONGODB_URI, {
 
 // define schema for events
 const planSchema = new mongoose.Schema({
-  title: String,
-  start: Date,
+  
+  name: String,
+  email: String,
+  topic: String,
+  location: String,
+  situation: String,
 });
 const planSchema2 = new mongoose.Schema({
   title: String,
@@ -62,10 +66,13 @@ app.get('/plans2', async (req, res) => {
 // create endpoint to create a new event
 app.post('/plans', async (req, res) => {
     try {
-      const { title, start } = req.body;
+      const { name , email , topic , location , situation } = req.body;
       const event = new Plan({
-        title,
-        start,
+        name,
+        email, 
+        topic, 
+        location,
+        situation,
       });
       await event.save();
       res.sendStatus(201);
