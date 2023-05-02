@@ -28,8 +28,15 @@ const planSchema = new mongoose.Schema({
   topic: String,
   location: String,
   situation: String,
-  replies: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Reply', autopopulate: { select: 'message' } }]
-}).plugin(require('mongoose-autopopulate'));
+});
+const planSchema3 = new mongoose.Schema({
+  name: String,
+  email: String,
+  topic: String,
+  location: String,
+  situation: String,
+  message: String,
+});
 
 const planSchema2 = new mongoose.Schema({
   title: String,
@@ -39,19 +46,24 @@ const planSchema2 = new mongoose.Schema({
   category: String,
 });
 
-const replySchema = new mongoose.Schema({
-  message: String,
-  plan: { type: mongoose.Schema.Types.ObjectId, ref: 'Plan' }
-});
 // create model for events
-const Reply = mongoose.model('Reply', replySchema);
 const Plan = mongoose.model('Plan', planSchema);
 const Plan2 = mongoose.model('Plan2', planSchema2);
+const Plan3 = mongoose.model('Plan3', planSchema3);
 
 // create endpoint to get all events
 app.get('/plans', async (req, res) => {
   try {
     const events = await Plan.find({});
+    res.send(events);
+  } catch (error) {
+    console.error(error);
+    res.sendStatus(500);
+  }
+});
+app.get('/plans3', async (req, res) => {
+  try {
+    const events = await Plan3.find({});
     res.send(events);
   } catch (error) {
     console.error(error);
@@ -89,6 +101,25 @@ app.post('/plans', async (req, res) => {
   });
 
 
+  app.post('/plans3', async (req, res) => {
+    try {
+      const { name , email , topic , location , situation , message } = req.body;
+      const event = new Plan({
+        name,
+        email, 
+        topic, 
+        location,
+        situation,
+        message,
+      });
+      await event.save();
+      res.sendStatus(201);
+    } catch (error) {
+      console.error(error);
+      res.status(500).send('Internal Server Error');
+    }
+  });
+
   
   app.post('/plans2', async (req, res) => {
     try {
@@ -109,43 +140,6 @@ app.post('/plans', async (req, res) => {
   });
 
 
-  app.post('/plans/:id/reply', async (req, res) => {
-    try {
-      const { id } = req.params;
-      const { replyMessage } = req.body;
-  
-      const plan = await Plan.findById(id);
-      if (!plan) {
-        return res.status(404).json({ message: 'Plan not found' });
-      }
-  
-      const reply = new Reply({
-        message: replyMessage,
-        plan: id
-      });
-  
-      await reply.save();
-  
-      res.status(200).json({ message: 'Reply message saved successfully' });
-    } catch (error) {
-      console.error(error);
-      res.status(500).json({ message: 'Internal server error' });
-    }
-  });
-  app.get('/plans/:id', async (req, res) => {
-  try {
-    const { id } = req.params;
-    const plan = await Plan.findById(id).populate('replies');
-    if (!plan) {
-      return res.status(404).json({ message: 'Plan not found' });
-    }
-    res.status(200).json({ plan });
-  } catch (error) {
-    console.error(error);
-    res.status(500).json({ message: 'Internal server error' });
-  }
-});
-  
 
   app.listen(PORT, () => {
     console.log(`Server started on port ${PORT}`);
