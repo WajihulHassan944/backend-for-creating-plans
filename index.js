@@ -29,9 +29,7 @@ const planSchema = new mongoose.Schema({
   location: String,
   situation: String,
   replies: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Reply', autopopulate: { select: 'message' } }]
-});
-
-planSchema.set('strictPopulate', false);
+}).plugin(require('mongoose-autopopulate'));
 
 const planSchema2 = new mongoose.Schema({
   title: String,
