@@ -38,7 +38,12 @@ const planSchema2 = new mongoose.Schema({
   category: String,
 });
 
+const replySchema = new mongoose.Schema({
+  message: String,
+  plan: { type: mongoose.Schema.Types.ObjectId, ref: 'Plan' }
+});
 // create model for events
+const Reply = mongoose.model('Reply', replySchema);
 const Plan = mongoose.model('Plan', planSchema);
 const Plan2 = mongoose.model('Plan2', planSchema2);
 
@@ -101,6 +106,45 @@ app.post('/plans', async (req, res) => {
       res.status(500).send('Internal Server Error');
     }
   });
+
+
+  app.post('/plans/:id/reply', async (req, res) => {
+    try {
+      const { id } = req.params;
+      const { replyMessage } = req.body;
+  
+      const plan = await Plan.findById(id);
+      if (!plan) {
+        return res.status(404).json({ message: 'Plan not found' });
+      }
+  
+      const reply = new Reply({
+        message: replyMessage,
+        plan: id
+      });
+  
+      await reply.save();
+  
+      res.status(200).json({ message: 'Reply message saved successfully' });
+    } catch (error) {
+      console.error(error);
+      res.status(500).json({ message: 'Internal server error' });
+    }
+  });
+  app.get('/plans/:id', async (req, res) => {
+    try {
+      const { id } = req.params;
+      const plan = await Plan.findById(id);
+      const replyMessage = plan.replyMessage;
+  
+      res.status(200).json({ plan, replyMessage });
+    } catch (error) {
+      console.error(error);
+      res.status(500).json({ message: 'Internal server error' });
+    }
+  });
+  
+  
 
   app.listen(PORT, () => {
     console.log(`Server started on port ${PORT}`);
