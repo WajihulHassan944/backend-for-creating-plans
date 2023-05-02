@@ -27,7 +27,7 @@ const planSchema = new mongoose.Schema({
   start: Date,
 });
 const planSchema2 = new mongoose.Schema({
-  name2: String,
+  title: String,
   content: String,
   date: Date,
   location: String,
@@ -79,9 +79,9 @@ app.post('/plans', async (req, res) => {
   
   app.post('/plans2', async (req, res) => {
     try {
-      const { name2 , content, date, location, category } = req.body;
+      const { title , content, date, location, category } = req.body;
       const event = new Plan2({
-        name2,
+        title,
         content,
         date,
         location,
