@@ -23,13 +23,16 @@ mongoose.connect(MONGODB_URI, {
 
 // define schema for events
 const planSchema = new mongoose.Schema({
-  
   name: String,
   email: String,
   topic: String,
   location: String,
   situation: String,
+  replies: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Reply', autopopulate: { select: 'message' } }]
 });
+
+planSchema.set('strictPopulate', false);
+
 const planSchema2 = new mongoose.Schema({
   title: String,
   content: String,
@@ -132,18 +135,18 @@ app.post('/plans', async (req, res) => {
     }
   });
   app.get('/plans/:id', async (req, res) => {
-    try {
-      const { id } = req.params;
-      const plan = await Plan.findById(id).populate('replies');
-      if (!plan) {
-        return res.status(404).json({ message: 'Plan not found' });
-      }
-      res.status(200).json({ plan });
-    } catch (error) {
-      console.error(error);
-      res.status(500).json({ message: 'Internal server error' });
+  try {
+    const { id } = req.params;
+    const plan = await Plan.findById(id).populate('replies');
+    if (!plan) {
+      return res.status(404).json({ message: 'Plan not found' });
     }
-  });
+    res.status(200).json({ plan });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: 'Internal server error' });
+  }
+});
   
 
   app.listen(PORT, () => {
