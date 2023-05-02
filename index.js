@@ -134,16 +134,16 @@ app.post('/plans', async (req, res) => {
   app.get('/plans/:id', async (req, res) => {
     try {
       const { id } = req.params;
-      const plan = await Plan.findById(id);
-      const replyMessage = plan.replyMessage;
-  
-      res.status(200).json({ plan, replyMessage });
+      const plan = await Plan.findById(id).populate('replies');
+      if (!plan) {
+        return res.status(404).json({ message: 'Plan not found' });
+      }
+      res.status(200).json({ plan });
     } catch (error) {
       console.error(error);
       res.status(500).json({ message: 'Internal server error' });
     }
   });
-  
   
 
   app.listen(PORT, () => {
