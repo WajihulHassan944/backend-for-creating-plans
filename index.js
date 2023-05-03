@@ -53,7 +53,8 @@ const helperSchema = new mongoose.Schema({
   comments: String,
   categoriestype: String,
 	locationtype: String,
-	
+  name: String,
+	email: String,
 });
 // create model for events
 const Plan = mongoose.model('Plan', planSchema);
