@@ -51,7 +51,9 @@ const helperSchema = new mongoose.Schema({
   location: String,
   schedule: String,
   comments: String,
-  rating: Number
+  categoriestype: String,
+	locationtype: String,
+	
 });
 // create model for events
 const Plan = mongoose.model('Plan', planSchema);
