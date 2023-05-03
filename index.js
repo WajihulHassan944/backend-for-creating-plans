@@ -45,12 +45,19 @@ const planSchema2 = new mongoose.Schema({
   location: String,
   category: String,
 });
-
+const helperSchema = new mongoose.Schema({
+  typeOfHelp: String,
+  categories: String,
+  location: String,
+  schedule: String,
+  comments: String,
+  rating: Number
+});
 // create model for events
 const Plan = mongoose.model('Plan', planSchema);
 const Plan2 = mongoose.model('Plan2', planSchema2);
 const Plan3 = mongoose.model('Plan3', planSchema3);
-
+const Helper = mongoose.model('Helper', helperSchema);
 // create endpoint to get all events
 app.get('/plans', async (req, res) => {
   try {
@@ -139,6 +146,26 @@ app.post('/plans', async (req, res) => {
     }
   });
 
+app.get('/api/helpers', async (req, res) => {
+  try {
+    const helpers = await Helper.find();
+    res.json(helpers);
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ message: 'Failed to retrieve helpers' });
+  }
+});
+
+app.post('/api/helpers', async (req, res) => {
+  const helper = new Helper(req.body);
+  try {
+    await helper.save();
+    res.json(helper);
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ message: 'Failed to add helper' });
+  }
+});
 
 
   app.listen(PORT, () => {
