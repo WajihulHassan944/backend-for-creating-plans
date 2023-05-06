@@ -29,6 +29,10 @@ const planSchema = new mongoose.Schema({
   location: String,
   situation: String,
 });
+const industriesSchema = new mongoose.Schema({
+  listitem: String,
+});
+
 const planSchema3 = new mongoose.Schema({
   name: String,
   email: String,
@@ -61,6 +65,7 @@ const Plan = mongoose.model('Plan', planSchema);
 const Plan2 = mongoose.model('Plan2', planSchema2);
 const Plan3 = mongoose.model('Plan3', planSchema3);
 const Helper = mongoose.model('Helper', helperSchema);
+const Industries = mongoose.model('Industries', industriesSchema);
 // create endpoint to get all events
 app.get('/plans', async (req, res) => {
   try {
@@ -169,6 +174,35 @@ app.post('/api/helpers', async (req, res) => {
     res.status(500).json({ message: 'Failed to add helper' });
   }
 });
+
+
+
+app.get('/industries', async (req, res) => {
+  try {
+    const events = await Industries.find({});
+    res.send(events);
+  } catch (error) {
+    console.error(error);
+    res.sendStatus(500);
+  }
+});
+
+// create endpoint to create a new event
+app.post('/industries', async (req, res) => {
+    try {
+      const { listitem } = req.body;
+      const event = new Industries({
+       listitem, 
+      });
+      await event.save();
+      res.sendStatus(201);
+    } catch (error) {
+      console.error(error);
+      res.status(500).send('Internal Server Error');
+    }
+  });
+
+
 
 
   app.listen(PORT, () => {
