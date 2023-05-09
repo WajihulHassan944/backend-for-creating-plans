@@ -174,9 +174,9 @@ app.post('/api/helpers', async (req, res) => {
     res.status(500).json({ message: 'Failed to add helper' });
   }
 });
-app.get('/api/helpers', async (req, res) => {
+app.get('/api/helpers/:key', async (req, res) => {
   try {
-    const searchQuery = req.query.q;
+    const searchQuery = req.params.key;
     const searchRegex = new RegExp(searchQuery, 'i');
     const results = await Helper.find({
       $or: [
