@@ -174,23 +174,28 @@ app.post('/api/helpers', async (req, res) => {
     res.status(500).json({ message: 'Failed to add helper' });
   }
 });
-
 app.get('/api/helpers', async (req, res) => {
-  const searchQuery = req.query.q.toLowerCase();
-  const results = await Helper.find({
-    $or: [
-      { typeOfHelp: { $regex: searchQuery, $options: 'i' } },
-      { categories: { $regex: searchQuery, $options: 'i' } },
-      { location: { $regex: searchQuery, $options: 'i' } },
-      { schedule: { $regex: searchQuery, $options: 'i' } },
-      { comments: { $regex: searchQuery, $options: 'i' } },
-      { categoriestype: { $regex: searchQuery, $options: 'i' } },
-      { locationtype: { $regex: searchQuery, $options: 'i' } },
-      { name: { $regex: searchQuery, $options: 'i' } },
-      { email: { $regex: searchQuery, $options: 'i' } }
-    ]
-  });
-  res.json(results);
+  try {
+    const searchQuery = req.query.q;
+    const searchRegex = new RegExp(searchQuery, 'i');
+    const results = await Helper.find({
+      $or: [
+        { name: searchRegex },
+        { location: searchRegex },
+        { typeOfHelp: searchRegex },
+        { categories: searchRegex },
+        { schedule: searchRegex },
+        { comments: searchRegex },
+        { categoriestype: searchRegex },
+        { locationtype: searchRegex },
+        { email: searchRegex }
+      ]
+    }).exec();
+    res.json(results);
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ message: 'Internal server error' });
+  }
 });
 
 
