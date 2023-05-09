@@ -175,6 +175,23 @@ app.post('/api/helpers', async (req, res) => {
   }
 });
 
+app.get('/api/helpers', async (req, res) => {
+  const searchQuery = req.query.q.toLowerCase();
+  const results = await Helper.find({
+    $or: [
+      { typeOfHelp: { $regex: searchQuery, $options: 'i' } },
+      { categories: { $regex: searchQuery, $options: 'i' } },
+      { location: { $regex: searchQuery, $options: 'i' } },
+      { schedule: { $regex: searchQuery, $options: 'i' } },
+      { comments: { $regex: searchQuery, $options: 'i' } },
+      { categoriestype: { $regex: searchQuery, $options: 'i' } },
+      { locationtype: { $regex: searchQuery, $options: 'i' } },
+      { name: { $regex: searchQuery, $options: 'i' } },
+      { email: { $regex: searchQuery, $options: 'i' } }
+    ]
+  });
+  res.json(results);
+});
 
 
 app.get('/industries', async (req, res) => {
