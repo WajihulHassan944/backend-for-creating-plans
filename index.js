@@ -68,6 +68,27 @@ const Plan3 = mongoose.model('Plan3', planSchema3);
 const Helper = mongoose.model('Helper', helperSchema);
 const Industries = mongoose.model('Industries', industriesSchema);
 // create endpoint to get all events
+
+app.get('/plans2/:key', async (req, res) => {
+  try {
+    const searchQuery = req.params.key;
+    const searchRegex = new RegExp(searchQuery, 'i');
+    const results = await Plan2.find({
+      $or: [
+        { title: searchRegex },
+        { content: searchRegex },
+        { location: searchRegex },
+        { category: searchRegex }
+      ]
+    }).exec();
+    res.json(results);
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ message: 'Internal server error' });
+  }
+});
+
+
 app.get('/plans', async (req, res) => {
   try {
     const events = await Plan.find({});
@@ -176,6 +197,8 @@ app.post('/api/helpers', async (req, res) => {
     res.status(500).json({ message: 'Failed to add helper' });
   }
 });
+
+
 app.get('/api/helpers/:key', async (req, res) => {
   try {
     const searchQuery = req.params.key;
