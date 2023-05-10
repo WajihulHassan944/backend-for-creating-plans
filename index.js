@@ -69,6 +69,30 @@ const Helper = mongoose.model('Helper', helperSchema);
 const Industries = mongoose.model('Industries', industriesSchema);
 // create endpoint to get all events
 
+
+app.get('/plans3/:key', async (req, res) => {
+  try {
+    const searchQuery = req.params.key;
+    const searchRegex = new RegExp(searchQuery, 'i');
+    const results = await Plan3.find({
+      $or: [
+        { name: searchRegex },
+        { email: searchRegex },
+        { location: searchRegex },
+        { topic: searchRegex },
+        { situation: searchRegex },
+        { message: searchRegex }
+      ]
+    }).exec();
+    res.json(results);
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ message: 'Internal server error' });
+  }
+});
+
+
+
 app.get('/plans2/:key', async (req, res) => {
   try {
     const searchQuery = req.params.key;
