@@ -32,6 +32,7 @@ const planSchema = new mongoose.Schema({
 });
 const industriesSchema = new mongoose.Schema({
   listitem: String,
+  link: String,
 });
 
 const planSchema3 = new mongoose.Schema({
@@ -261,9 +262,10 @@ app.get('/industries', async (req, res) => {
 // create endpoint to create a new event
 app.post('/industries', async (req, res) => {
     try {
-      const { listitem } = req.body;
+      const { listitem , link } = req.body;
       const event = new Industries({
        listitem, 
+       link,
       });
       await event.save();
       res.sendStatus(201);
