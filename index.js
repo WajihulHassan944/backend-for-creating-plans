@@ -275,7 +275,25 @@ app.post('/industries', async (req, res) => {
     }
   });
 
-
+  app.put('/industries/:id', async (req, res) => {
+    try {
+      const industry = await Industry.findByIdAndUpdate(req.params.id, req.body, { new: true });
+      res.json(industry);
+    } catch (error) {
+      res.status(500).json({ error: 'Failed to update industry' });
+    }
+  });
+  
+  // Delete an industry
+  app.delete('/industries/:id', async (req, res) => {
+    try {
+      await Industry.findByIdAndDelete(req.params.id);
+      res.sendStatus(204);
+    } catch (error) {
+      res.status(500).json({ error: 'Failed to delete industry' });
+    }
+  });
+  
 
 
   app.listen(PORT, () => {
