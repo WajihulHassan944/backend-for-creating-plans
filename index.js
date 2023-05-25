@@ -123,6 +123,7 @@ app.get('/plans', async (req, res) => {
     res.sendStatus(500);
   }
 });
+
 app.get('/plans3', async (req, res) => {
   try {
     const events = await Plan3.find({});
@@ -142,6 +143,68 @@ app.get('/plans2', async (req, res) => {
     res.sendStatus(500);
   }
 });
+
+
+app.put('/plans/:id', async (req, res) => {
+  try {
+    const events = await Plan.findByIdAndUpdate(req.params.id, req.body, { new: true });
+    res.json(events);
+  } catch (error) {
+    res.status(500).json({ error: 'Failed to update events' });
+  }
+});
+
+
+app.delete('/plans/:id', async (req, res) => {
+  try {
+    await Plan.findByIdAndDelete(req.params.id);
+    res.sendStatus(204);
+  } catch (error) {
+    res.status(500).json({ error: 'Failed to delete events' });
+  }
+});
+
+
+app.put('/plans2/:id', async (req, res) => {
+  try {
+    const events = await Plan2.findByIdAndUpdate(req.params.id, req.body, { new: true });
+    res.json(events);
+  } catch (error) {
+    res.status(500).json({ error: 'Failed to update events' });
+  }
+});
+
+
+app.delete('/plans2/:id', async (req, res) => {
+  try {
+    await Plan2.findByIdAndDelete(req.params.id);
+    res.sendStatus(204);
+  } catch (error) {
+    res.status(500).json({ error: 'Failed to delete events' });
+  }
+});
+
+
+app.put('/plans3/:id', async (req, res) => {
+  try {
+    const events = await Plan3.findByIdAndUpdate(req.params.id, req.body, { new: true });
+    res.json(events);
+  } catch (error) {
+    res.status(500).json({ error: 'Failed to update events' });
+  }
+});
+
+
+app.delete('/plans3/:id', async (req, res) => {
+  try {
+    await Plan3.findByIdAndDelete(req.params.id);
+    res.sendStatus(204);
+  } catch (error) {
+    res.status(500).json({ error: 'Failed to delete events' });
+  }
+});
+
+
 
 // create endpoint to create a new event
 app.post('/plans', async (req, res) => {
@@ -222,6 +285,28 @@ app.post('/api/helpers', async (req, res) => {
     res.status(500).json({ message: 'Failed to add helper' });
   }
 });
+
+
+app.put('/api/helpers/:id', async (req, res) => {
+  try {
+    const helper = await Helper.findByIdAndUpdate(req.params.id, req.body, { new: true });
+    res.json(helper);
+  } catch (error) {
+    res.status(500).json({ error: 'Failed to update helper' });
+  }
+});
+
+
+app.delete('/api/helpers/:id', async (req, res) => {
+  try {
+    await Helper.findByIdAndDelete(req.params.id);
+    res.sendStatus(204);
+  } catch (error) {
+    res.status(500).json({ error: 'Failed to delete helper' });
+  }
+});
+
+
 
 
 app.get('/api/helpers/:key', async (req, res) => {
