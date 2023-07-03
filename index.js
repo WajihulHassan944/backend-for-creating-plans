@@ -21,7 +21,13 @@ mongoose.connect(MONGODB_URI, {
   useUnifiedTopology: true,
 });
 
-// define schema for events
+const dataExcelOne = new mongoose.Schema({
+  name111: String,
+  address: String,
+  zip: String,
+  phone: String,
+});
+
 const planSchema = new mongoose.Schema({
   name: String,
   email: String,
@@ -68,6 +74,7 @@ const Plan2 = mongoose.model('Plan2', planSchema2);
 const Plan3 = mongoose.model('Plan3', planSchema3);
 const Helper = mongoose.model('Helper', helperSchema);
 const Industries = mongoose.model('Industries', industriesSchema);
+const DataExcelOne = mongoose.model('DataExcelOne', dataExcelOne);
 // create endpoint to get all events
 
 
@@ -376,6 +383,54 @@ app.post('/industries', async (req, res) => {
       res.sendStatus(204);
     } catch (error) {
       res.status(500).json({ error: 'Failed to delete industry' });
+    }
+  });
+  
+// db1
+
+
+app.get('/dataExcelOne', async (req, res) => {
+  try {
+    const events = await DataExcelOne.find({});
+    res.send(events);
+  } catch (error) {
+    console.error(error);
+    res.sendStatus(500);
+  }
+});
+
+app.post('/dataExcelOne', async (req, res) => {
+    try {
+      const { name111,  address,  zip, phone } = req.body;
+      const event = new DataExcelOne({
+       name111, 
+       address,
+       zip,
+       phone,
+      });
+      await event.save();
+      res.sendStatus(201);
+    } catch (error) {
+      console.error(error);
+      res.status(500).send('Internal Server Error');
+    }
+  });
+
+  app.put('/dataExcelOne/:id', async (req, res) => {
+    try {
+      const industry = await DataExcelOne.findByIdAndUpdate(req.params.id, req.body, { new: true });
+      res.json(industry);
+    } catch (error) {
+      res.status(500).json({ error: 'Failed to update record1' });
+    }
+  });
+  
+  app.delete('/dataExcelOne/:id', async (req, res) => {
+    try {
+      await DataExcelOne.findByIdAndDelete(req.params.id);
+      res.sendStatus(204);
+    } catch (error) {
+      res.status(500).json({ error: 'Failed to delete record1' });
     }
   });
   
