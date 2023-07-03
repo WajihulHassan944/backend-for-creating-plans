@@ -398,26 +398,23 @@ app.get('/dataExcelOne', async (req, res) => {
     res.sendStatus(500);
   }
 });
-app.post('/dataExcelOne', async (req, res) => {
-  try {
-    const data = req.body;
-    const events = data.map(obj => {
-      const { name111, address, zip, phone } = obj;
-      return {
-        name111,
-        address,
-        zip,
-        phone,
-      };
-    });
-    await DataExcelOne.insertMany(events);
-    res.sendStatus(201);
-  } catch (error) {
-    console.error(error);
-    res.status(500).send('Internal Server Error');
-  }
-});
 
+app.post('/dataExcelOne', async (req, res) => {
+    try {
+      const { name111,  address,  zip, phone } = req.body;
+      const event = new DataExcelOne({
+       name111, 
+       address,
+       zip,
+       phone,
+      });
+      await event.save();
+      res.sendStatus(201);
+    } catch (error) {
+      console.error(error);
+      res.status(500).send('Internal Server Error');
+    }
+  });
 
   app.put('/dataExcelOne/:id', async (req, res) => {
     try {
