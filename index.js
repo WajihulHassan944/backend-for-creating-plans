@@ -435,35 +435,26 @@ app.post('/dataExcelOne', async (req, res) => {
   });
   
 
-  app.get('/dataExcelOne/:key', async (req, res) => {
-    try {
-      const searchQuery = req.params.key;
-      const searchRegex = new RegExp(searchQuery, 'i');
-      const query = {};
   
-      if (searchQuery.includes('name111')) {
-        const nameQuery = searchQuery.split('name111=')[1];
-        query.name111 = new RegExp(nameQuery, 'i');
-      }
-  
-      if (searchQuery.includes('address')) {
-        const addressQuery = searchQuery.split('address=')[1];
-        query.address = new RegExp(addressQuery, 'i');
-      }
-  
-      if (searchQuery.includes('zip')) {
-        const zipQuery = searchQuery.split('zip=')[1];
-        query.zip = new RegExp(zipQuery, 'i');
-      }
-  
-      const results = await DataExcelOne.find(query).exec();
-      res.json(results);
-    } catch (err) {
-      console.error(err);
-      res.status(500).json({ message: 'Internal server error' });
-    }
-  });
-  
+app.get('/dataExcelOne/:key', async (req, res) => {
+  try {
+    const searchQuery = req.params.key;
+    const searchRegex = new RegExp(searchQuery, 'i');
+    const results = await DataExcelOne.find({
+      $or: [
+        { name111: searchRegex },
+        { address: searchRegex },
+        { zip: searchRegex },
+        { phone: searchRegex }
+      ]
+    }).exec();
+    res.json(results);
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ message: 'Internal server error' });
+  }
+});
+
 
   app.listen(PORT, () => {
     console.log(`Server started on port ${PORT}`);
