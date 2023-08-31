@@ -470,15 +470,6 @@ io.on('connection', (socket) => {
   console.log('A user connected:', socket.id);
 
 });
-socket.on('disconnect', () => {
-  const index = players.indexOf(socket.id);
-  if (index !== -1) {
-    players.splice(index, 1);
-    io.emit('playerLeft', socket.id);
-  }
-  console.log('A user disconnected:', socket.id);
-});
-
   
   app.get("/", (req,res) =>{
       res.send("hello");
